@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiation Java SDK - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8981d 0%, #d9534f 100%);
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8981d 0%, #d9534f 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '☕';
+            position: absolute;
+            font-size: 12rem;
+            opacity: 0.15;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: steam 4s ease-in-out infinite;
+        }
+
+        @keyframes steam {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; }
+            25% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.2; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.25; }
+            75% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.2; }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .demo-section {
+            padding: 80px 0;
+            background: #2d3748;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .demo-card {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .demo-card h3 {
+            color: #f8981d;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .code-block {
+            background: #1a202c;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid #f8981d;
+        }
+
+        .code-block code {
+            color: #ffffff;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .interactive-demo {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .demo-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .demo-button {
+            background: linear-gradient(45deg, #f8981d, #d9534f);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(248,152,29,0.3);
+        }
+
+        .demo-output {
+            background: #1a202c;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 100px;
+            border: 1px solid rgba(248,152,29,0.3);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .features {
+            padding: 80px 0;
+            background: #4a5568;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8981d 0%, #d9534f 100%);
+            text-align: center;
+        }
+
+        .cta-button {
+            background: #ffffff;
+            color: #f8981d;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #f8981d;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .java-keyword {
+            color: #f8981d;
+            font-weight: bold;
+        }
+
+        .java-type {
+            color: #4CAF50;
+        }
+
+        .java-annotation {
+            color: #9C27B0;
+        }
+
+        .java-string {
+            color: #2196F3;
+        }
+
+        @media (max-width: 768px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <h1>☕ Tiation Java SDK</h1>
+            <p>Enterprise-grade Java SDK with Spring Boot integration</p>
+            
+            <div class="badges">
+                <span class="badge">Java 11+</span>
+                <span class="badge">Spring Boot</span>
+                <span class="badge">Reactive</span>
+                <span class="badge">Enterprise Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #f8981d;">Interactive Java Demo</h2>
+            <p style="text-align: center; margin-bottom: 40px; opacity: 0.8;">Experience the power of Tiation Java SDK with Spring Boot integration</p>
+
+            <div class="interactive-demo">
+                <h3>☕ Java SDK Simulator</h3>
+                <p>Test Java SDK functionality with Spring Boot integration:</p>
+                
+                <input type="text" class="demo-input" id="apiKey" placeholder="Enter your API key (or use demo mode)">
+                <button class="demo-button" onclick="testBasicAPI()">Basic API Call</button>
+                <button class="demo-button" onclick="testSpringBoot()">Spring Boot Demo</button>
+                <button class="demo-button" onclick="testReactive()">Reactive Streams</button>
+                <button class="demo-button" onclick="runJavaDemo()">Full Demo</button>
+                
+                <div class="demo-output" id="output">
+                    <p style="color: #f8981d;">Java SDK Demo Ready...</p>
+                </div>
+            </div>
+
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3>🌱 Spring Boot Integration</h3>
+                    <p>Seamless integration with Spring Boot applications</p>
+                    <div class="code-block">
+                        <code>
+<span class="java-annotation">@Configuration</span>
+<span class="java-annotation">@EnableTiation</span>
+<span class="java-keyword">public class</span> <span class="java-type">TiationConfig</span> {
+    
+    <span class="java-annotation">@Bean</span>
+    <span class="java-keyword">public</span> <span class="java-type">TiationClient</span> tiationClient() {
+        <span class="java-keyword">return new</span> <span class="java-type">TiationClient</span>(<span class="java-string">"your_api_key"</span>);
+    }
+}
+
+<span class="java-annotation">@Service</span>
+<span class="java-keyword">public class</span> <span class="java-type">BusinessService</span> {
+    
+    <span class="java-annotation">@Autowired</span>
+    <span class="java-keyword">private</span> <span class="java-type">TiationClient</span> tiationClient;
+    
+    <span class="java-keyword">public</span> <span class="java-type">Analytics</span> getAnalytics() {
+        <span class="java-keyword">return</span> tiationClient.analytics().getMetrics();
+    }
+}
+                        </code>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>🔄 Reactive Programming</h3>
+                    <p>Full support for reactive programming with RxJava</p>
+                    <div class="code-block">
+                        <code>
+<span class="java-keyword">import</span> com.tiation.reactive.ReactiveTiationClient;
+<span class="java-keyword">import</span> io.reactivex.rxjava3.core.Observable;
+
+<span class="java-type">ReactiveTiationClient</span> reactiveClient = 
+    <span class="java-keyword">new</span> <span class="java-type">ReactiveTiationClient</span>(<span class="java-string">"your_api_key"</span>);
+
+<span class="java-comment">// Reactive API calls</span>
+<span class="java-type">Observable</span>&lt;<span class="java-type">Analytics</span>&gt; metricsObservable = 
+    reactiveClient.analytics().getMetrics();
+
+<span class="java-comment">// Combine observables</span>
+<span class="java-type">Observable</span>.zip(
+    metricsObservable,
+    workflowsObservable,
+    (metrics, workflows) -> <span class="java-keyword">new</span> <span class="java-type">CombinedResult</span>(metrics, workflows)
+).subscribe(result -> {
+    <span class="java-comment">// Process combined result</span>
+});
+                        </code>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>🏗️ Builder Pattern</h3>
+                    <p>Fluent API design with builder pattern for clean code</p>
+                    <div class="code-block">
+                        <code>
+<span class="java-comment">// Create content with builder pattern</span>
+<span class="java-type">Content</span> content = <span class="java-keyword">new</span> <span class="java-type">Content</span>.Builder()
+    .title(<span class="java-string">"New Product Launch"</span>)
+    .body(<span class="java-string">"Exciting new features available!"</span>)
+    .category(<span class="java-string">"announcements"</span>)
+    .build();
+
+<span class="java-type">Content</span> result = client.cms().createContent(content);
+
+<span class="java-comment">// Create workflow with builder</span>
+<span class="java-type">Workflow</span> workflow = <span class="java-keyword">new</span> <span class="java-type">Workflow</span>.Builder()
+    .name(<span class="java-string">"Customer Onboarding"</span>)
+    .trigger(<span class="java-string">"user_signup"</span>)
+    .actions(<span class="java-type">List</span>.of(<span class="java-string">"send_welcome_email"</span>, <span class="java-string">"create_profile"</span>))
+    .build();
+                        </code>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <h3>🔧 Error Handling</h3>
+                    <p>Comprehensive error handling with custom exceptions</p>
+                    <div class="code-block">
+                        <code>
+<span class="java-keyword">try</span> {
+    <span class="java-type">Analytics</span> analytics = client.analytics().getMetrics();
+} <span class="java-keyword">catch</span> (<span class="java-type">RateLimitException</span> e) {
+    <span class="java-type">System</span>.out.printf(<span class="java-string">"Rate limit exceeded: %d seconds\n"</span>, 
+        e.getRetryAfter());
+} <span class="java-keyword">catch</span> (<span class="java-type">ApiException</span> e) {
+    <span class="java-type">System</span>.out.printf(<span class="java-string">"API error: %s (code: %d)\n"</span>, 
+        e.getMessage(), e.getCode());
+} <span class="java-keyword">catch</span> (<span class="java-type">TiationException</span> e) {
+    <span class="java-type">System</span>.out.printf(<span class="java-string">"SDK error: %s\n"</span>, e.getMessage());
+}
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 40px;">Why Choose Tiation Java SDK?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏢</div>
+                    <h3>Enterprise Ready</h3>
+                    <p>Built for large-scale Java applications with enterprise features</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🌱</div>
+                    <h3>Spring Boot Integration</h3>
+                    <p>Seamless integration with Spring Boot and Spring Framework</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Reactive Support</h3>
+                    <p>Full reactive programming support with RxJava and Project Reactor</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Type Safety</h3>
+                    <p>Strongly typed interfaces with compile-time error checking</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Batch Operations</h3>
+                    <p>Efficient batch processing for high-throughput applications</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Builder Pattern</h3>
+                    <p>Fluent API design for clean and readable code</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <div class="container">
+            <h2 style="margin-bottom: 30px;">Ready to Build Enterprise Java Apps?</h2>
+            <p style="margin-bottom: 40px; font-size: 1.2rem;">Join the Java enterprise community using Tiation SDK</p>
+            
+            <a href="https://github.com/tiation/tiation-java-sdk" class="cta-button">📚 Documentation</a>
+            <a href="https://mvnrepository.com/artifact/com.tiation/tiation-java-sdk" class="cta-button">📦 Maven Central</a>
+            <a href="mailto:tiatheone@protonmail.com" class="cta-button">💬 Get Support</a>
+        </div>
+    </div>
+
+    <script>
+        function updateOutput(content, isError = false) {
+            const output = document.getElementById('output');
+            const color = isError ? '#d9534f' : '#f8981d';
+            output.innerHTML = `<p style="color: ${color};">${content}</p>`;
+        }
+
+        function showLoading() {
+            updateOutput('<span class="loading"></span> Compiling Java code...');
+        }
+
+        function testBasicAPI() {
+            showLoading();
+            
+            setTimeout(() => {
+                updateOutput(`<span style="color: #f8981d;">import</span> com.tiation.TiationClient;<br><br>
+                    <span style="color: #f8981d;">public class</span> <span style="color: #4CAF50;">Example</span> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">public static void</span> <span style="color: #4CAF50;">main</span>(<span style="color: #4CAF50;">String</span>[] args) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4CAF50;">TiationClient</span> client = <span style="color: #f8981d;">new</span> <span style="color: #4CAF50;">TiationClient</span>(<span style="color: #2196F3;">"demo_key"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4CAF50;">Analytics</span> analytics = client.analytics().getMetrics();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4CAF50;">System</span>.out.printf(<span style="color: #2196F3;">"Revenue: $%.2f%n"</span>, analytics.getRevenue());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br><br>
+                    <span style="color: #4CAF50;">✅ Basic API call completed!</span><br>
+                    Revenue: $125,430.50<br>
+                    Users: 1,247`);
+            }, 1500);
+        }
+
+        function testSpringBoot() {
+            showLoading();
+            
+            setTimeout(() => {
+                updateOutput(`<span style="color: #9C27B0;">@RestController</span><br>
+                    <span style="color: #f8981d;">public class</span> <span style="color: #4CAF50;">AnalyticsController</span> {<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #9C27B0;">@Autowired</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">private</span> <span style="color: #4CAF50;">TiationClient</span> tiationClient;<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #9C27B0;">@GetMapping</span>(<span style="color: #2196F3;">"/analytics"</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">public</span> <span style="color: #4CAF50;">Analytics</span> getAnalytics() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">return</span> tiationClient.analytics().getMetrics();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #9C27B0;">@PostMapping</span>(<span style="color: #2196F3;">"/workflow"</span>)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">public</span> <span style="color: #4CAF50;">Workflow</span> createWorkflow(<span style="color: #9C27B0;">@RequestBody</span> <span style="color: #4CAF50;">WorkflowRequest</span> request) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">return</span> tiationClient.automation().createWorkflow(request.toWorkflow());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br><br>
+                    <span style="color: #4CAF50;">✅ Spring Boot integration working!</span><br>
+                    🌱 Auto-configuration enabled<br>
+                    🔄 Dependency injection successful<br>
+                    📊 REST endpoints created`);
+            }, 2000);
+        }
+
+        function testReactive() {
+            showLoading();
+            
+            setTimeout(() => {
+                updateOutput(`<span style="color: #f8981d;">import</span> io.reactivex.rxjava3.core.Observable;<br><br>
+                    <span style="color: #4CAF50;">ReactiveTiationClient</span> reactiveClient = <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">new</span> <span style="color: #4CAF50;">ReactiveTiationClient</span>(<span style="color: #2196F3;">"demo_key"</span>);<br><br>
+                    <span style="color: #4CAF50;">Observable</span>&lt;<span style="color: #4CAF50;">Analytics</span>&gt; metricsObservable = <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;reactiveClient.analytics().getMetrics();<br><br>
+                    <span style="color: #4CAF50;">Observable</span>.zip(<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;metricsObservable,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;workflowsObservable,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;(metrics, workflows) -> <span style="color: #f8981d;">new</span> <span style="color: #4CAF50;">CombinedResult</span>(metrics, workflows)<br>
+                    ).subscribe(result -> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2196F3;">// Process combined result</span><br>
+                    });<br><br>
+                    <span style="color: #4CAF50;">✅ Reactive streams working!</span><br>
+                    🔄 Observable chains created<br>
+                    ⚡ Asynchronous processing: 2.3x faster<br>
+                    📊 Backpressure handled automatically`);
+            }, 1800);
+        }
+
+        function runJavaDemo() {
+            showLoading();
+            
+            setTimeout(() => {
+                updateOutput(`<span style="color: #4CAF50;">☕ Java SDK Full Enterprise Demo</span><br><br>
+                    <span style="color: #9C27B0;">@SpringBootApplication</span><br>
+                    <span style="color: #9C27B0;">@EnableTiation</span><br>
+                    <span style="color: #f8981d;">public class</span> <span style="color: #4CAF50;">TiationDemoApplication</span> {<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">public static void</span> <span style="color: #4CAF50;">main</span>(<span style="color: #4CAF50;">String</span>[] args) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4CAF50;">SpringApplication</span>.run(<span style="color: #4CAF50;">TiationDemoApplication</span>.class, args);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #9C27B0;">@Bean</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">public</span> <span style="color: #4CAF50;">TiationClient</span> tiationClient() {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">return</span> <span style="color: #f8981d;">new</span> <span style="color: #4CAF50;">TiationClient</span>(<span style="color: #2196F3;">"demo_key"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #9C27B0;">@EventListener</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #f8981d;">public void</span> <span style="color: #4CAF50;">onApplicationReady</span>(<span style="color: #4CAF50;">ApplicationReadyEvent</span> event) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #2196F3;">// Initialize analytics dashboard</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4CAF50;">Analytics</span> analytics = tiationClient.analytics().getMetrics();<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #4CAF50;">Workflow</span> workflow = tiationClient.automation().createWorkflow(...);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }<br><br>
+                    <span style="color: #4CAF50;">✅ Enterprise demo completed!</span><br>
+                    🌱 Spring Boot application started<br>
+                    📊 Analytics: Revenue $125,430 | Users 1,247<br>
+                    🔄 Workflow: "Java Enterprise Demo" (ID: java_wf_123)<br>
+                    ⚡ Reactive streams: 3 observables combined<br>
+                    🏢 Enterprise features: Batch operations, monitoring, security`);
+            }, 2500);
+        }
+
+        // Auto-run demo on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                updateOutput('☕ Java SDK interactive demo loaded! Try the buttons above to test enterprise features.');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
